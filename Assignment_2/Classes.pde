@@ -10,13 +10,13 @@ public class Colour {
 //There should only be one.
 public class Building extends CanvasObject {
   private int max; //Maximum number of windows in the year.
-  private int curr; //Current value given.
+  int curr; //Current value given.
   private int gridSize; //Size of the grid of windows
   private HashMap<String, Colour> palette; //The colour palette of the building.
   
   Building(float x, float y, float w, float h) {
     super(x, y, w, h);
-    updateMax(112);
+    updateMax(1);
     
     //Set colours
     palette = DeepCopyColours();
@@ -52,7 +52,7 @@ public class Building extends CanvasObject {
       fill(palette.get(busyWindows-- <= 0 ? "Window" : "Busy").colour);
       float windowX = x + padX + windowW * (i % gridSize);
       float windowY = y + padY + windowH * (i / gridSize);
-      rect(windowX, windowY, windowW - padX * 0.1, windowH - padY * 0.1);
+      rect(windowX, windowY, windowW * 0.9, windowH * 0.9);
     }
   }
 }

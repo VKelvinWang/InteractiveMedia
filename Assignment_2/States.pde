@@ -16,6 +16,14 @@ void doState() {
 //Threaded function to prevent freezing.
 void loadLink() {
   data = loadTable(links.get(currLink), "csv");
+  
+  int[] rawData = new int[data.getRowCount()];
+  for (int i = 0; i < rawData.length; i++) {
+    rawData[i] = data.getInt(i, 1);
+  }
+  building.updateMax(max(rawData));
+  building.curr = rawData[0];
+  
   state = "Show data";
 }
 

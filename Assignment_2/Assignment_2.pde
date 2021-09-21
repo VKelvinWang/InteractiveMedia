@@ -12,6 +12,7 @@ int currLink; //The current link that is loaded.
 int prevLink; //The previous link that was loaded.
 
 ArrayList<Object> objects; //Holds all objects on the screen.
+Building building;
 HashMap<Character, Boolean> keyManager; //Ensures that the button is only pressed once even when holding it.
 ArrayList<KeyboardBindable> keyboardBindedObjects; //Holds all objects that has implemented this.
 
@@ -59,7 +60,8 @@ void setup(){
   float y = height * 0.1;
   float w = width - x;
   float h = height - y;
-  objects.add(new Building(x, y, w, h));
+  building = new Building(x, y, w, h);
+  objects.add(building);
 }
 
 void draw(){

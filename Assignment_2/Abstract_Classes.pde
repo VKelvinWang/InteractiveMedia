@@ -1,3 +1,9 @@
+/*
+Every object that is on the screen should have:
+  1. A bounding box.
+  2. Collision detection.
+  3. Position on the screen.
+*/
 abstract class CanvasObject implements Object {
   float x; //X position
   float y; //Y position
@@ -9,6 +15,11 @@ abstract class CanvasObject implements Object {
     this.y = y;
     this.w = w;
     this.h = h;
+  }
+  
+  @Override void blit() { //Calls both update and display at once.
+    update();
+    display();
   }
   
   /*
@@ -28,7 +39,8 @@ abstract class CanvasObject implements Object {
     return left && right && top && bottom;
   }
   
-  boolean mouseOver() { //Overload for the mouseOver function
+  //Just an overload for the mouseOver function
+  boolean mouseOver() {
     return mouseOver(0, 0);
   }
 }

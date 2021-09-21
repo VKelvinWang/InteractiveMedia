@@ -1,8 +1,15 @@
 import beads.*;
 
-Table dataTable;
+float deltaTime; //Time since last draw loop (iteration)
+long time; //Time since program started
+String state; //The current state of the program, is it loading?
+LoadingScreen loadingScreen; //The loading screen of the program.
+
+Table data;
 HashMap<String, Colour> colours; //Universally holds all colours added into it.
 ArrayList<String> links; //Holds the links for the entire timeline.
+int currLink; //The current link that is loaded.
+int prevLink; //The previous link that was loaded.
 
 ArrayList<Object> objects; //Holds all objects on the screen.
 HashMap<Character, Boolean> keyManager; //Ensures that the button is only pressed once even when holding it.
@@ -15,8 +22,16 @@ void setup(){
   size(1920, 1080);
   
   //Initialise global variables
-  links = new ArrayList<String>();
+  deltaTime = 0;
+  time = millis();
+  state = "Loading link";
+  loadingScreen = new LoadingScreen(width / 2, height / 2, 50, 100, 100);
+  
+  ////variable data is not initialised here, would freeze the program.
   colours = new HashMap<String, Colour>();
+  links = new ArrayList<String>();
+  currLink = 0;
+  prevLink = -1;
   
   objects = new ArrayList<Object>();
   keyManager = new HashMap<Character, Boolean>();
@@ -24,12 +39,10 @@ void setup(){
   //Be sure to use "keyboardBindedObjects.add(this)" in the contructor for whatever class that implemented this.
   keyboardBindedObjects = new ArrayList<KeyboardBindable>();
   
-  
-  //Add objects into scene.
-  ////Add stuff here. Delete this comment.
-  
   //Set colours into hashmap
-  colours.put("Sky blue", new Colour(color(135, 206, 235))); //Sky blue
+  colours.put("Sky blue", new Colour(color(135, 206, 235)));
+  colours.put("White", new Colour(color(255, 255, 255)));
+  colours.put("Black", new Colour(color(0, 0, 0)));
   
   //Data: PCLabs Logins
   //Start date: 1/1/2015
@@ -40,15 +53,25 @@ void setup(){
   links.add("https://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2017-01-01T00%3A00&rToDate=2018-01-01T00%3A00&rFamily=logins&rSensor=E1-07404");
   links.add("https://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2018-01-01T00%3A00&rToDate=2019-01-01T00%3A00&rFamily=logins&rSensor=E1-07404");
   links.add("https://eif-research.feit.uts.edu.au/api/csv/?rFromDate=2019-01-01T00%3A00&rToDate=2020-01-01T00%3A00&rFamily=logins&rSensor=E1-07404");
+  
+  //Add objects into scene.
+  float x = width * 0.6;
+  float y = height * 0.1;
+  float w = width - x;
+  float h = height - y;
+  objects.add(new Building(x, y, w, h));
 }
 
 void draw(){
-  background(colours.get("Sky blue").colour);
+  background(colours.get(state != "Show data" ? "Black" : "Sky blue").colour);
   
-  for (Object object : objects) { //For every object in the scene, add
-    object.update();
-    object.display();
+  if (prevLink != currLink) {
+    prevLink = currLink; //Update link
+    state = "Loading link";
   }
   
+  doState();
+  
   leftClick = false; //Ensures that left click lasts one frame
+  calculateDeltaTime();
 }

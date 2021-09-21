@@ -1,9 +1,11 @@
 void keyPressed() {
-  if (keyManager.containsKey(key) && keyManager.get(key)) { //Ensures that the held button does not execute more than once.
+  //Ensures that the held button does not execute more than once.
+  if (keyManager.containsKey(key) && keyManager.get(key)) {
     return;
   }
   
-  for (KeyboardBindable object : keyboardBindedObjects) { //For all objects that have been binded
+  //For all objects that have been binded
+  for (KeyboardBindable object : keyboardBindedObjects) {
     object.keyInputAction();  
   }
   
@@ -11,7 +13,7 @@ void keyPressed() {
 }
 
 void keyReleased() {
-  keyManager.put(key, false);
+  keyManager.put(key, false); //No check is needed, guarenteed to be in the hashmap.
 }
 
 void mousePressed() {

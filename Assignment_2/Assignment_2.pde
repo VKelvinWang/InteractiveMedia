@@ -25,6 +25,7 @@ boolean leftClickHold; //Is the left click being held?
 AudioContext ac;//Sound
 WavePlayer wp;
 Glide freq;
+HashMap<String, SamplePlayer> samplePlayers; //All the sample audios loaded
 
 void setup(){
   size(1920, 1080);
@@ -73,16 +74,19 @@ void setup(){
   
   ///////////////////////////////////Minh
   ac = new AudioContext();
+  samplePlayers = new HashMap<String, SamplePlayer>();
+  
   Envelope freqEnv = new Envelope(ac, 900);
   wp = new WavePlayer(ac, freqEnv, Buffer.SQUARE);
   
   //COMPUTER WHIRRING SOUND IN BACKGROUND
-  String background = sketchPath() + "/whirringsound.wav";
-  SamplePlayer player1 = new SamplePlayer(ac, SampleManager.sample(background));
-  player1.setLoopType(SamplePlayer.LoopType.LOOP_FORWARDS); //Background music loop
+  samplePlayers.put("WhirringSound", new SamplePlayer(ac, SampleManager.sample(sketchPath() + "/whirringsound.wav")));
+  samplePlayers.put("LeftClickSound", new SamplePlayer(ac, SampleManager.sample(sketchPath() + "/leftclicksound.wav")));
+  
+  samplePlayers.get("WhirringSound").setLoopType(SamplePlayer.LoopType.LOOP_FORWARDS); //Background music loop
   Panner p = new Panner(ac, 0);
   Gain g = new Gain(ac, 2, 1);
-  p.addInput(player1);
+  p.addInput(samplePlayers.get("WhirringSound"));
   g.addInput(p);
   ac.out.addInput(g);
   ac.start();

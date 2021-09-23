@@ -20,6 +20,7 @@ void mousePressed() {
   if (mouseButton == LEFT) {
     leftClick = true;
     leftClickHold = true;
+    sound();
   }
 }
 

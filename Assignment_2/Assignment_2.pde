@@ -82,6 +82,8 @@ void setup(){
 
   //COMPUTER WHIRRING SOUND IN BACKGROUND
   samplePlayers.put("WhirringSound", new SamplePlayer(ac, SampleManager.sample(sketchPath() + "/whirringsound.wav")));
+  samplePlayers.put("keyboardtypingsound", new SamplePlayer(ac, SampleManager.sample(sketchPath() + "/keyboardtypingsound.mp3")));
+  
   samplePlayers.get("WhirringSound").setLoopType(SamplePlayer.LoopType.LOOP_FORWARDS); //Background music loop
   Panner p = new Panner(ac, 0);
   Gain g = new Gain(ac, 1, 0.2); //volume control between 0.0-1.0

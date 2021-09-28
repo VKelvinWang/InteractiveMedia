@@ -72,26 +72,24 @@ void setup(){
   float h = height - y;
   building = new Building(x, y, w, h);
   objects.add(building);
-  
+
   ///////////////////////////////////Minh
   ac = new AudioContext();
   samplePlayers = new HashMap<String, SamplePlayer>();
-  
+
   Envelope freqEnv = new Envelope(ac, 900);
   wp = new WavePlayer(ac, freqEnv, Buffer.SQUARE);
-  
+
   //COMPUTER WHIRRING SOUND IN BACKGROUND
   samplePlayers.put("WhirringSound", new SamplePlayer(ac, SampleManager.sample(sketchPath() + "/whirringsound.wav")));
-  samplePlayers.put("LeftClickSound", new SamplePlayer(ac, SampleManager.sample(sketchPath() + "/leftclicksound.wav")));
-  
   samplePlayers.get("WhirringSound").setLoopType(SamplePlayer.LoopType.LOOP_FORWARDS); //Background music loop
   Panner p = new Panner(ac, 0);
-  Gain g = new Gain(ac, 2, 1);
+  Gain g = new Gain(ac, 1, 0.2); //volume control between 0.0-1.0
   p.addInput(samplePlayers.get("WhirringSound"));
   g.addInput(p);
   ac.out.addInput(g);
   ac.start();
-  
+
   ///////////////////////////////////Kelvin
   String[] menus = new String[] {"2015-2016", "2016-2017", "2017-2018", "2018-2019", "2019-2020"};
   float buttonX = width * 0.2;
@@ -99,6 +97,7 @@ void setup(){
   float buttonW = width * 0.3;
   float buttonH = height * 0.1;
   objects.add(new Timeline(buttonX, buttonY, buttonW, buttonH, menus));
+
 }
 
 

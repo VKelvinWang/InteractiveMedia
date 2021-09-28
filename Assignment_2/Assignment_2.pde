@@ -53,6 +53,7 @@ void setup(){
   colours.put("Sky blue", new Colour(color(135, 206, 235)));
   colours.put("White", new Colour(color(255, 255, 255)));
   colours.put("Black", new Colour(color(0, 0, 0)));
+  colours.put("Invisible", new Colour(color(0, 0, 0, 0)));
 
   //Data: PCLabs Logins
   //Start date: 1/1/2015
@@ -90,8 +91,18 @@ void setup(){
   g.addInput(p);
   ac.out.addInput(g);
   ac.start();
+  
+  ///////////////////////////////////Kelvin
+  String[] menus = new String[] {"2015-2016", "2016-2017", "2017-2018", "2018-2019", "2019-2020"};
+  float buttonX = width * 0.2;
+  float buttonY = 10;
+  float buttonW = width * 0.3;
+  float buttonH = height * 0.1;
+  objects.add(new Timeline(buttonX, buttonY, buttonW, buttonH, menus));
 }
 
+
+int testIndex = 0;
 void draw(){
   background(colours.get(state != "Show data" ? "Black" : "Sky blue").colour);
 

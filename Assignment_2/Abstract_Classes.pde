@@ -44,3 +44,34 @@ abstract class CanvasObject implements Object {
     return mouseOver(0, 0);
   }
 }
+
+abstract class Interactable extends CanvasObject {
+  boolean isHovering;
+  
+  Interactable(float x, float y, float w, float h) {
+    super(x, y, w, h);
+    isHovering = false;
+  }
+  
+  @Override void update() {
+    isHovering = mouseOver();
+    if (isHovering && leftClick) {
+      doAction();
+    }
+  }
+  
+  void doAction() {}
+}
+
+//Kelvin
+//Button class for implementation inside the navigation bar
+abstract class Button extends Interactable {
+  HashMap<String, Colour> palette; //The colour palette of the button.
+  
+  Button(float x, float y, float w, float h) {
+    super(x, y, w, h);
+    
+    palette = DeepCopyColours();
+    palette.put("HoverColour", new Colour(color(0, 255,0)));
+  }
+}

@@ -93,3 +93,60 @@ public class LoadingScreen extends CanvasObject {
     }
   }
 }
+
+public class TimelineButton extends Button {
+  Timeline timeline;
+  int step;
+  
+  TimelineButton(Timeline timeline, float x, float y, float w, float h, int step) {
+    super(x, y, w, h);
+    this.step = step;
+    this.timeline = timeline;
+  }
+  
+  @Override void display() {
+    //adds the outline of the rect
+    stroke(palette.get("Black").colour);
+    fill(palette.get(isHovering ? "HoverColour" : "Sky blue").colour);
+    rect(x, y, w, h);
+    stroke(palette.get("Invisible").colour);
+  }
+  
+  @Override void doAction() {
+    timeline.index = (timeline.index + step) % timeline.times.length; 
+  }
+}
+
+public class Timeline extends CanvasObject {
+  String[] times;
+  int index;
+  
+  TimelineButton leftButton;
+  TimelineButton rightButton;
+  
+  Timeline(float x, float y, float w, float h, String[] times) {
+    super(x, y, w, h);
+    this.times = times;
+    index = currLink;
+    leftButton = new TimelineButton(this, x, y, h, h, -1);
+    rightButton = new TimelineButton(this, x + w - h, y, h, h, 1);
+  }
+  
+  @Override void update() {
+    leftButton.update();
+    rightButton.update();
+    index = index < 0 ? times.length - 1 : index;
+    currLink = index;
+  }
+  
+  @Override void display() {
+    leftButton.display();
+    fill(colours.get("Black").colour);
+    
+    textAlign(CENTER, CENTER);
+    textSize(50);
+    text(times[index], x + w / 2, y + h / 2);
+    
+    rightButton.display();
+  }
+}

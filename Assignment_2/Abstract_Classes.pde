@@ -75,3 +75,39 @@ abstract class Button extends Interactable {
     palette.put("HoverColour", new Colour(color(0, 255,0)));
   }
 }
+
+//Ryan
+abstract class Navigator extends CanvasObject {
+  String[] labels;
+  int index;
+  
+  NavigatorButton leftButton;
+  NavigatorButton rightButton;
+  
+  Navigator(float x, float y, float w, float h, String[] labels) {
+    super(x, y, w, h);
+    this.labels = labels;
+    index = currLink;
+    leftButton = new NavigatorButton(this, x, y, h, h, -1);
+    rightButton = new NavigatorButton(this, x + w - h, y, h, h, 1);
+  }
+  
+  //Overrides Object
+  @Override void update() {
+    leftButton.update();
+    rightButton.update();
+    index = index < 0 ? labels.length - 1 : index;
+  }
+  
+  //Overrides Object
+  @Override void display() {
+    leftButton.display();
+    
+    fill(colours.get("Black").colour);
+    textAlign(CENTER, CENTER);
+    textSize(50);
+    text(labels[index], x + w / 2, y + h / 2);
+    
+    rightButton.display();
+  }
+}

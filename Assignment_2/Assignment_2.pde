@@ -1,6 +1,9 @@
 import beads.*;
 import processing.sound.*;
 
+//Constants
+String[] MONTHNAMES;
+
 //Ryan
 float deltaTime; //Time since last draw loop (iteration)
 long time; //Time since program started
@@ -35,6 +38,9 @@ void setup(){
   size(1920, 1080);
 
   ///////////////////////////////////Ryan
+  //Seting constants
+  MONTHNAMES = new String[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+  
   //Initialise global variables
   deltaTime = 0;
   time = millis();
@@ -88,12 +94,22 @@ void setup(){
   objects.add(new MonthlyBarGraph(x, y, w, h));
 
   ///////////////////////////////////Kelvin
-  String[] menus = new String[] {"2015-2016", "2016-2017", "2017-2018", "2018-2019", "2019-2020"};
+  String[] labels = new String[] {"2015-2016", "2016-2017", "2017-2018", "2018-2019", "2019-2020"};
   x = width * 0.15;
   y = height * 0.01;
   w = width * 0.3;
   h = height * 0.1;
-  objects.add(new Timeline(x, y, w, h, menus));
+  objects.add(new YearNavigator(x, y, w, h, labels));
+  
+  y = height * 0.6;
+  objects.add(new MonthNavigator(x, y, w, h));
+  
+  y = height * 0.7;
+  labels = new String[31];
+  for (int i = 0; i < labels.length; i++) {
+    labels[i] = str(i + 1);
+  }
+  objects.add(new DayNavigator(x, y, w, h, labels));
 
   ///////////////////////////////////Minh
   ac = new AudioContext();
@@ -115,8 +131,6 @@ void setup(){
   ac.start();
 }
 
-
-int testIndex = 0;
 void draw() {
   background(colours.get(state != "Show data" ? "Black" : "Sky blue").colour);
 

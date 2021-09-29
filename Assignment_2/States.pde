@@ -32,7 +32,7 @@ void changeLink() {
     date = data.getString(i, 0);
     currDay = date.substring(8, 10);
     
-    if (prevDay.equals(currDay)) {
+    if (prevDay.equals(currDay) && i != data.getRowCount() - 1) {
       totalDailyLogin += data.getInt(i, 1);
       continue;
     }
@@ -42,11 +42,11 @@ void changeLink() {
     prevDay = currDay;
     totalMonthlyLogin += totalDailyLogin;
     highestLogins = totalDailyLogin > highestLogins ? totalDailyLogin : highestLogins;
-    totalDailyLogin = 0;
+    totalDailyLogin = data.getInt(i, 1);
     numOfDaysInMonth++;
     
     currMonth = date.substring(5, 7);
-    if (prevMonth.equals(currMonth)) {
+    if (prevMonth.equals(currMonth) && i != data.getRowCount() - 1) {
       continue;
     }
     
@@ -70,7 +70,4 @@ void updateObjects() {
   for (Object object : objects) {
     object.blit();
   }
-  
-  fill(colours.get("Black").colour);
-  text(dayIndex, width / 2, height / 2);
 }

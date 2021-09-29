@@ -134,50 +134,69 @@ public class LoadingScreen extends CanvasObject {
   }
 }
 
-public class Timeline extends CanvasObject {
-  String[] times;
-  int index;
-  
-  TimelineButton leftButton;
-  TimelineButton rightButton;
-  
-  Timeline(float x, float y, float w, float h, String[] times) {
-    super(x, y, w, h);
-    this.times = times;
-    index = currLink;
-    leftButton = new TimelineButton(this, x, y, h, h, -1);
-    rightButton = new TimelineButton(this, x + w - h, y, h, h, 1);
+public class YearNavigator extends Navigator {  
+  YearNavigator(float x, float y, float w, float h, String[] labels) {
+    super(x, y, w, h, labels);
   }
   
-  //Overrides Object
+  //Overrides Navigator
   @Override void update() {
-    leftButton.update();
-    rightButton.update();
-    index = index < 0 ? times.length - 1 : index;
+    super.update();
     currLink = index;
-  }
-  
-  //Overrides Object
-  @Override void display() {
-    leftButton.display();
-    
-    fill(colours.get("Black").colour);
-    textAlign(CENTER, CENTER);
-    textSize(50);
-    text(times[index], x + w / 2, y + h / 2);
-    
-    rightButton.display();
   }
 }
 
-public class TimelineButton extends Button { //Dependent class on Timeline
-  Timeline timeline;
+public class MonthNavigator extends Navigator {  
+  MonthNavigator(float x, float y, float w, float h) {
+    super(x, y, w, h, MONTHNAMES);
+  }
+  
+  //Overrides Navigator
+  @Override void update() {
+    super.update();
+    monthIndex = index;
+  }
+}
+
+public class DayNavigator extends Navigator {
+  boolean skip;
+  
+  DayNavigator(float x, float y, float w, float h, String[] labels) {
+    super(x, y, w, h, labels);
+    skip = false;
+  }
+  
+  //Overrides Navigator
+  @Override void update() {
+    int size = yearData.months[monthIndex].dailyLogins.size();
+    skip = size == 0;
+    if (skip) {
+      return;
+    }
+
+    leftButton.update();
+    index = index < 0 ? size - 1 : index;
+    rightButton.update();
+    index %= size;
+    
+    dayIndex = index;
+  }
+  
+  @Override void display() {
+    if (!skip) {
+      super.display();
+    }
+  }
+}
+
+public class NavigatorButton extends Button { //Dependent class on Timeline
+  Navigator navigator;
   int step;
   
-  TimelineButton(Timeline timeline, float x, float y, float w, float h, int step) {
+  NavigatorButton(Navigator navigator, float x, float y, float w, float h, int step) {
     super(x, y, w, h);
     this.step = step;
-    this.timeline = timeline;
+    this.navigator = navigator;
   }
   
   //Overrides Object
@@ -190,13 +209,12 @@ public class TimelineButton extends Button { //Dependent class on Timeline
   
   //Overrides Button
   @Override void doAction() {
-    timeline.index = (timeline.index + step) % timeline.times.length; 
+    navigator.index = (navigator.index + step) % navigator.labels.length; 
   }
 }
 
 public class MonthlyBarGraph extends CanvasObject {
   float[] monthValues; //The average login for each month in values
-  String[] monthNames; //The month names
   int prevLink; //The previous link a field separate to the global instance of the variable
   int max; //The highest login value in the month
   
@@ -205,7 +223,6 @@ public class MonthlyBarGraph extends CanvasObject {
     monthValues = new float[12]; //There is always 12 months in a year right?
     prevLink = -1;
     max = 0;
-    monthNames = new String[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
   }
   
   @Override void update() {
@@ -233,7 +250,7 @@ public class MonthlyBarGraph extends CanvasObject {
       float xPos = x + (barWidth * i);
       float yPos = y + h;
       rect(xPos, yPos - barHeight, barWidth, barHeight);
-      text(monthNames[i], xPos + barWidth * 0.5, yPos + textHeight * 0.5);
+      text(MONTHNAMES[i], xPos + barWidth * 0.5, yPos + textHeight * 0.5);
       text(ceil(monthValues[i]), xPos + barWidth * 0.5, yPos - barHeight - textHeight);
     }
     text("Average user logins everyday (Rounded up)", x + w * 0.5, y + h * 1.5);

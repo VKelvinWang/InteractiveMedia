@@ -58,7 +58,6 @@ public class Building extends CanvasObject {
     max = newMax;
     curr = max(0, min(curr, max)); //Clamps value between 0 and new max.
     gridSize = GetClosestSquaredNumber(max);
-    updateWindows();
   }
   
   //Overrides Object
@@ -140,8 +139,7 @@ public class YearNavigator extends Navigator {
   }
   
   //Overrides Navigator
-  @Override void update() {
-    super.update();
+  @Override void doAction() {
     currLink = index;
   }
 }
@@ -152,8 +150,7 @@ public class MonthNavigator extends Navigator {
   }
   
   //Overrides Navigator
-  @Override void update() {
-    super.update();
+  @Override void doAction() {
     monthIndex = index;
   }
 }
@@ -168,24 +165,27 @@ public class DayNavigator extends Navigator {
   
   //Overrides Navigator
   @Override void update() {
-    int size = yearData.months[monthIndex].dailyLogins.size();
-    skip = size == 0;
+    skip = yearData.months[monthIndex].dailyLogins.size() == 0;
     if (skip) {
       return;
     }
 
     leftButton.update();
-    index = index < 0 ? size - 1 : index;
     rightButton.update();
-    index %= size;
-    
-    dayIndex = index;
+    doAction();
   }
   
   @Override void display() {
     if (!skip) {
       super.display();
     }
+  }
+  
+  @Override void doAction() {
+    int size = yearData.months[monthIndex].dailyLogins.size();
+    index = index > size ? size - 1 : index;
+    index %= size;
+    dayIndex = index;
   }
 }
 
@@ -209,7 +209,10 @@ public class NavigatorButton extends Button { //Dependent class on Timeline
   
   //Overrides Button
   @Override void doAction() {
-    navigator.index = (navigator.index + step) % navigator.labels.length; 
+    navigator.index = (navigator.index + step) % navigator.labels.length;
+    navigator.index = navigator.index < 0 ? navigator.labels.length - 1 : navigator.index;
+    navigator.doAction();
+    updateDayIndex();
   }
 }
 
@@ -232,7 +235,7 @@ public class MonthlyBarGraph extends CanvasObject {
     prevLink = currLink;
     
     for (int i = 0; i < monthValues.length; i++) {
-      monthValues[i] = GetMonth(i).getAvg(); //Ternary to account for 2019-2020
+      monthValues[i] = GetMonth(i).getAvg();
     }
     max = (int)max(monthValues);
   }

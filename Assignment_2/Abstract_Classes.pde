@@ -96,7 +96,6 @@ abstract class Navigator extends CanvasObject {
   @Override void update() {
     leftButton.update();
     rightButton.update();
-    index = index < 0 ? labels.length - 1 : index;
   }
   
   //Overrides Object
@@ -110,4 +109,6 @@ abstract class Navigator extends CanvasObject {
     
     rightButton.display();
   }
+  
+  void doAction() {}
 }

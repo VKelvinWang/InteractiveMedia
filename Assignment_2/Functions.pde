@@ -31,3 +31,12 @@ int GetClosestSquaredNumber(int num) {
 MonthlyData GetMonth(int index) {
   return yearData.months[index];
 }
+
+void updateDayIndex() {
+  int numOfDays = GetMonth(monthIndex).dailyLogins.size();
+  if (numOfDays > 0) {
+    dayIndex = dayIndex < 0 ? numOfDays - 1 : dayIndex;
+    dayIndex %= numOfDays;
+    building.updateWindows();
+  }
+}

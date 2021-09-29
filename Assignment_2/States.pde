@@ -56,11 +56,8 @@ void changeLink() {
     totalMonthlyLogin = 0;
   }
   
-  int numOfDays = GetMonth(monthIndex).dailyLogins.size();
-  dayIndex = dayIndex < 0 ? numOfDays - 1 : dayIndex;
-  dayIndex = dayIndex % numOfDays;
-  
   building.updateMax(highestLogins);
+  updateDayIndex();
   
   state = "Show data";
 }

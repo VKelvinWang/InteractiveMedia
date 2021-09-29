@@ -57,7 +57,7 @@ void changeLink() {
   }
   
   building.updateMax(highestLogins);
-  updateDayIndex();
+  building.updateWindows();
   
   state = "Show data";
 }

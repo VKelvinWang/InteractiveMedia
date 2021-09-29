@@ -82,7 +82,14 @@ public class Building extends CanvasObject {
   }
   
   public void updateWindows() { //Call this procedure to update the data.
-    curr = GetMonth(monthIndex).dailyLogins.get(dayIndex);
+    int size = GetMonth(monthIndex).dailyLogins.size();
+    curr = 0;
+    if (size > 0) {
+      dayIndex = dayIndex > size ? size - 1 : dayIndex;
+      dayIndex %= size;
+      curr = GetMonth(monthIndex).dailyLogins.get(dayIndex);
+    }
+    
     int numOfWindows = gridSize * gridSize;
     windowState = new boolean[numOfWindows]; //Clear all window states
     int litWindows = curr;
@@ -170,9 +177,8 @@ public class DayNavigator extends Navigator {
       return;
     }
 
-    leftButton.update();
-    rightButton.update();
-    doAction();
+    super.update();
+    index = dayIndex;
   }
   
   @Override void display() {
@@ -182,9 +188,9 @@ public class DayNavigator extends Navigator {
   }
   
   @Override void doAction() {
-    int size = yearData.months[monthIndex].dailyLogins.size();
-    index = index > size ? size - 1 : index;
-    index %= size;
+    //int size = yearData.months[monthIndex].dailyLogins.size();
+    //index = index > size ? size - 1 : index;
+    //index %= size;
     dayIndex = index;
   }
 }
@@ -212,7 +218,7 @@ public class NavigatorButton extends Button { //Dependent class on Timeline
     navigator.index = (navigator.index + step) % navigator.labels.length;
     navigator.index = navigator.index < 0 ? navigator.labels.length - 1 : navigator.index;
     navigator.doAction();
-    updateDayIndex();
+    building.updateWindows();
   }
 }
 

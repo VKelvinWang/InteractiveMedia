@@ -13,6 +13,10 @@ ArrayList<String> links; //Holds the links for the entire timeline.
 int currLink; //The current link that is loaded.
 int prevLink; //The previous link that was loaded.
 
+YearData yearData;
+int dayIndex; //The index to access data on a day in the month
+int monthIndex; //The index to access a month in the year.
+
 ArrayList<Object> objects; //Holds all objects on the screen.
 Building building;
 HashMap<Character, Boolean> keyManager; //Ensures that the button is only pressed once even when holding it.
@@ -43,6 +47,10 @@ void setup(){
   currLink = 0;
   prevLink = -1;
 
+  yearData = new YearData();
+  dayIndex = 0;
+  monthIndex = 0;
+
   objects = new ArrayList<Object>();
   keyManager = new HashMap<Character, Boolean>();
 
@@ -72,6 +80,20 @@ void setup(){
   float h = height - y;
   building = new Building(x, y, w, h);
   objects.add(building);
+  
+  x = width * 0.05;
+  y = height * 0.2;
+  w = width * 0.5;
+  h = height * 0.15;
+  objects.add(new MonthlyBarGraph(x, y, w, h));
+
+  ///////////////////////////////////Kelvin
+  String[] menus = new String[] {"2015-2016", "2016-2017", "2017-2018", "2018-2019", "2019-2020"};
+  x = width * 0.15;
+  y = height * 0.01;
+  w = width * 0.3;
+  h = height * 0.1;
+  objects.add(new Timeline(x, y, w, h, menus));
 
   ///////////////////////////////////Minh
   ac = new AudioContext();
@@ -91,20 +113,11 @@ void setup(){
   g.addInput(p);
   ac.out.addInput(g);
   ac.start();
-
-  ///////////////////////////////////Kelvin
-  String[] menus = new String[] {"2015-2016", "2016-2017", "2017-2018", "2018-2019", "2019-2020"};
-  float buttonX = width * 0.2;
-  float buttonY = 10;
-  float buttonW = width * 0.3;
-  float buttonH = height * 0.1;
-  objects.add(new Timeline(buttonX, buttonY, buttonW, buttonH, menus));
-
 }
 
 
 int testIndex = 0;
-void draw(){
+void draw() {
   background(colours.get(state != "Show data" ? "Black" : "Sky blue").colour);
 
   if (prevLink != currLink) {

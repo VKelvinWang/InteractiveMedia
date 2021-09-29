@@ -7,16 +7,43 @@ public class Colour {
   }
 }
 
+
+public class YearData {
+  MonthlyData[] months;
+  
+  YearData() {
+    months = new MonthlyData[12];
+    for (int i = 0; i < months.length; i++) {
+      months[i] = new MonthlyData();
+    }
+  }
+}
+
+public class MonthlyData {
+  float averageLogins;
+  ArrayList<Integer> dailyLogins;
+  int highestLogins;
+  
+  MonthlyData() {
+    dailyLogins = new ArrayList<Integer>();
+    averageLogins = 0;
+  }
+  
+  int getAvg() {
+    return ceil(averageLogins);
+  }
+}
+
 //There should only be one.
 public class Building extends CanvasObject {
   private int max; //Maximum number of windows in the year.
-  int curr; //Current value given.
+  private int curr; //Current value given.
   private int gridSize; //Size of the grid of windows
   private HashMap<String, Colour> palette; //The colour palette of the building.
+  private boolean[] windowState; //Dictates whether the window is lit on or not.
   
   Building(float x, float y, float w, float h) {
     super(x, y, w, h);
-    updateMax(1);
     
     //Set colours
     palette = DeepCopyColours();
@@ -31,11 +58,11 @@ public class Building extends CanvasObject {
     max = newMax;
     curr = max(0, min(curr, max)); //Clamps value between 0 and new max.
     gridSize = GetClosestSquaredNumber(max);
+    updateWindows();
   }
   
   //Overrides Object
-  @Override void update() {
-  }
+  @Override void update() {}
   
   //Overrides Object
   @Override void display() {
@@ -43,16 +70,29 @@ public class Building extends CanvasObject {
     rectMode(CORNER);
     rect(x, y, w, h);
     
-    int busyWindows = curr;
     float padX = w * 0.1;
     float padY = h * 0.1;
     float windowW = w * 0.8 / gridSize; //Width of each window
     float windowH = h * 0.8 / gridSize; //Height of of window
     for (int i = 0; i < gridSize * gridSize; i++) {
-      fill(palette.get(busyWindows-- <= 0 ? "Window" : "Busy").colour);
+      fill(palette.get(windowState[i] ? "Busy" : "Window").colour);
       float windowX = x + padX + windowW * (i % gridSize);
       float windowY = y + padY + windowH * (i / gridSize);
       rect(windowX, windowY, windowW * 0.9, windowH * 0.9);
+    }
+  }
+  
+  public void updateWindows() { //Call this procedure to update the data.
+    curr = GetMonth(monthIndex).dailyLogins.get(dayIndex);
+    int numOfWindows = gridSize * gridSize;
+    windowState = new boolean[numOfWindows]; //Clear all window states
+    int litWindows = curr;
+    while (litWindows > 0) {
+      int randIndex = (int)random(0, numOfWindows);
+      if (!windowState[randIndex]) {
+        windowState[randIndex] = true;
+        litWindows--;
+      }
     }
   }
 }
@@ -94,29 +134,6 @@ public class LoadingScreen extends CanvasObject {
   }
 }
 
-public class TimelineButton extends Button {
-  Timeline timeline;
-  int step;
-  
-  TimelineButton(Timeline timeline, float x, float y, float w, float h, int step) {
-    super(x, y, w, h);
-    this.step = step;
-    this.timeline = timeline;
-  }
-  
-  @Override void display() {
-    //adds the outline of the rect
-    stroke(palette.get("Black").colour);
-    fill(palette.get(isHovering ? "HoverColour" : "Sky blue").colour);
-    rect(x, y, w, h);
-    stroke(palette.get("Invisible").colour);
-  }
-  
-  @Override void doAction() {
-    timeline.index = (timeline.index + step) % timeline.times.length; 
-  }
-}
-
 public class Timeline extends CanvasObject {
   String[] times;
   int index;
@@ -132,6 +149,7 @@ public class Timeline extends CanvasObject {
     rightButton = new TimelineButton(this, x + w - h, y, h, h, 1);
   }
   
+  //Overrides Object
   @Override void update() {
     leftButton.update();
     rightButton.update();
@@ -139,14 +157,86 @@ public class Timeline extends CanvasObject {
     currLink = index;
   }
   
+  //Overrides Object
   @Override void display() {
     leftButton.display();
-    fill(colours.get("Black").colour);
     
+    fill(colours.get("Black").colour);
     textAlign(CENTER, CENTER);
     textSize(50);
     text(times[index], x + w / 2, y + h / 2);
     
     rightButton.display();
+  }
+}
+
+public class TimelineButton extends Button { //Dependent class on Timeline
+  Timeline timeline;
+  int step;
+  
+  TimelineButton(Timeline timeline, float x, float y, float w, float h, int step) {
+    super(x, y, w, h);
+    this.step = step;
+    this.timeline = timeline;
+  }
+  
+  //Overrides Object
+  @Override void display() {
+    stroke(palette.get("Black").colour);
+    fill(palette.get(isHovering ? "HoverColour" : "Sky blue").colour);
+    rect(x, y, w, h);
+    stroke(palette.get("Invisible").colour);
+  }
+  
+  //Overrides Button
+  @Override void doAction() {
+    timeline.index = (timeline.index + step) % timeline.times.length; 
+  }
+}
+
+public class MonthlyBarGraph extends CanvasObject {
+  float[] monthValues; //The average login for each month in values
+  String[] monthNames; //The month names
+  int prevLink; //The previous link a field separate to the global instance of the variable
+  int max; //The highest login value in the month
+  
+  MonthlyBarGraph(float x, float y, float w, float h) {
+    super(x, y, w, h);
+    monthValues = new float[12]; //There is always 12 months in a year right?
+    prevLink = -1;
+    max = 0;
+    monthNames = new String[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+  }
+  
+  @Override void update() {
+    if (prevLink == currLink) {
+      return;
+    }
+    prevLink = currLink;
+    
+    for (int i = 0; i < monthValues.length; i++) {
+      monthValues[i] = GetMonth(i).getAvg(); //Ternary to account for 2019-2020
+    }
+    max = (int)max(monthValues);
+  }
+  
+  @Override void display() {
+    rectMode(CORNER);
+    fill(colours.get("Black").colour);
+    stroke(colours.get("White").colour);
+    textAlign(CENTER, CENTER);
+    textSize(30);
+    float textHeight = textAscent() + textDescent();
+    float barWidth = w / monthValues.length;
+    for (int i = 0; i < monthValues.length; i++) {
+      float barHeight = monthValues[i] / max * h;
+      float xPos = x + (barWidth * i);
+      float yPos = y + h;
+      rect(xPos, yPos - barHeight, barWidth, barHeight);
+      text(monthNames[i], xPos + barWidth * 0.5, yPos + textHeight * 0.5);
+      text(ceil(monthValues[i]), xPos + barWidth * 0.5, yPos - barHeight - textHeight);
+    }
+    text("Average user logins everyday (Rounded up)", x + w * 0.5, y + h * 1.5);
+    stroke(colours.get("Invisible").colour);
   }
 }

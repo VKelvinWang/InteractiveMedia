@@ -27,3 +27,7 @@ int GetClosestSquaredNumber(int num) {
   }
   return square;
 }
+
+MonthlyData GetMonth(int index) {
+  return yearData.months[index];
+}

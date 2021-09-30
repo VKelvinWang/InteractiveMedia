@@ -1,4 +1,5 @@
 void sound() {
+  samplePlayers.put("keyboardtypingsound", new SamplePlayer(ac, SampleManager.sample(sketchPath() + "/keyboardtypingsound.mp3")));
   Envelope rate = new Envelope(ac, 1);
   samplePlayers.get("keyboardtypingsound").setRate(rate);
   //rate.addSegment(1.5, 200);

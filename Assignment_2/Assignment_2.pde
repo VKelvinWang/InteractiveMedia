@@ -34,13 +34,16 @@ WavePlayer wp;
 Glide freq;
 HashMap<String, SamplePlayer> samplePlayers; //All the sample audios loaded
 
-void setup(){
+//Kelvin
+PImage computer;
+
+void setup() {
   size(1920, 1080);
 
   ///////////////////////////////////Ryan
   //Seting constants
   MONTHNAMES = new String[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-  
+
   //Initialise global variables
   deltaTime = 0;
   time = millis();
@@ -86,7 +89,7 @@ void setup(){
   float h = height - y;
   building = new Building(x, y, w, h);
   objects.add(building);
-  
+
   x = width * 0.05;
   y = height * 0.2;
   w = width * 0.5;
@@ -94,16 +97,17 @@ void setup(){
   objects.add(new MonthlyBarGraph(x, y, w, h));
 
   ///////////////////////////////////Kelvin
+
   String[] labels = new String[] {"2015-2016", "2016-2017", "2017-2018", "2018-2019", "2019-2020"};
   x = width * 0.15;
   y = height * 0.01;
   w = width * 0.3;
   h = height * 0.1;
   objects.add(new YearNavigator(x, y, w, h, labels));
-  
+
   y = height * 0.6;
   objects.add(new MonthNavigator(x, y, w, h));
-  
+
   y = height * 0.7;
   labels = new String[31];
   for (int i = 0; i < labels.length; i++) {
@@ -111,6 +115,12 @@ void setup(){
   }
   objects.add(new DayNavigator(x, y, w, h, labels));
 
+  x = width * 0.07;
+  y = height * 0.45;
+  w = 900;
+  h = 650;
+  objects.add(new Computer(x, y, w, h, "cartooncomp.png"));
+  
   ///////////////////////////////////Minh
   ac = new AudioContext();
   samplePlayers = new HashMap<String, SamplePlayer>();
@@ -118,7 +128,7 @@ void setup(){
   Envelope freqEnv = new Envelope(ac, 900);
   wp = new WavePlayer(ac, freqEnv, Buffer.SQUARE);
 
-  //COMPUTER WHIRRING SOUND IN BACKGROUND
+  ////COMPUTER WHIRRING SOUND IN BACKGROUND
   samplePlayers.put("WhirringSound", new SamplePlayer(ac, SampleManager.sample(sketchPath() + "/whirringsound.wav")));
   samplePlayers.get("WhirringSound").setLoopType(SamplePlayer.LoopType.LOOP_FORWARDS); //Background music loop
   Panner p = new Panner(ac, 0);
@@ -126,6 +136,16 @@ void setup(){
   p.addInput(samplePlayers.get("WhirringSound"));
   g.addInput(p);
   ac.out.addInput(g);
+  ac.start();
+
+  ///////////////////////Kelvin
+  samplePlayers.put("BackgroundMusic", new SamplePlayer(ac, SampleManager.sample(sketchPath() + "/backgroundmusic.wav")));
+  samplePlayers.get("BackgroundMusic").setLoopType(SamplePlayer.LoopType.LOOP_FORWARDS); //Background music loop
+  Panner pan = new Panner(ac, 0);
+  Gain gains = new Gain(ac, 1, 0.2); //volume control between 0.0-1.0
+  pan.addInput(samplePlayers.get("BackgroundMusic"));
+  gains.addInput(pan);
+  ac.out.addInput(gains);
   ac.start();
 }
 

@@ -122,7 +122,7 @@ void setup(){
   samplePlayers.put("WhirringSound", new SamplePlayer(ac, SampleManager.sample(sketchPath() + "/whirringsound.wav")));
   samplePlayers.get("WhirringSound").setLoopType(SamplePlayer.LoopType.LOOP_FORWARDS); //Background music loop
   Panner p = new Panner(ac, 0);
-  Gain g = new Gain(ac, 1, 0.2); //volume control between 0.0-1.0
+  Gain g = new Gain(ac, 1, 0.1); //volume control between 0.0-1.0
   p.addInput(samplePlayers.get("WhirringSound"));
   g.addInput(p);
   ac.out.addInput(g);

@@ -35,7 +35,9 @@ Glide freq;
 HashMap<String, SamplePlayer> samplePlayers; //All the sample audios loaded
 
 //Kelvin
+HashMap<String, PImage> imageManager; //Universally holds all images into a hashmap
 PImage computer;
+PImage background;
 
 void setup() {
   size(1920, 1080);
@@ -62,7 +64,7 @@ void setup() {
 
   objects = new ArrayList<Object>();
   keyManager = new HashMap<Character, Boolean>();
-
+  imageManager = new HashMap<String, PImage>();
   //Be sure to use "keyboardBindedObjects.add(this)" in the contructor for whatever class that implemented this.
   keyboardBindedObjects = new ArrayList<KeyboardBindable>();
 
@@ -115,11 +117,16 @@ void setup() {
   }
   objects.add(new DayNavigator(x, y, w, h, labels));
 
+  //Kelvin
+  PImage computer = loadImage("cartooncomp.png");
+  PImage background = loadImage("background.png");
+  imageManager.put("Computer", computer);
+  imageManager.put("background", background);
   x = width * 0.07;
   y = height * 0.45;
   w = 900;
   h = 650;
-  objects.add(new Computer(x, y, w, h, "cartooncomp.png"));
+  objects.add(new Computer(x, y, w, h, imageManager.get("Computer")));
   
   ///////////////////////////////////Minh
   ac = new AudioContext();

@@ -9,18 +9,16 @@ public class Colour {
 
 //Kelvin
 public class Computer extends CanvasObject {
-  PImage image;
-  String pathway;
-  Computer(float x, float y, float w, float h, String pathway) {
+  PImage pathway;
+  Computer(float x, float y, float w, float h, PImage pathway) {
     super(x, y, w, h);
     this.pathway = pathway;
   }
 
   @Override void display() {
     //prints the image
-    image = loadImage(pathway);
-    image.resize((int)w, (int)h);
-    image(image, x, y);
+    pathway.resize((int)w, (int)h);
+    image(pathway, x, y);
 
     //prints out text
     fill(colours.get("Black").colour);

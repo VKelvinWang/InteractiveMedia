@@ -76,7 +76,7 @@ public class Building extends CanvasObject {
     palette.put("No stroke", new Colour(color(0, 0, 0, 0)));
     palette.put("Busy", new Colour(color(250, 168, 26))); //Discord orange
     palette.put("Window", new Colour(color(24, 25, 28))); //Discord dark grey
-    palette.put("Body", new Colour(color(132, 115, 90))); //Ugliest Tower In Sydney colour
+    palette.put("Body", new Colour(color(157, 125, 125))); //Building 11 colour
   }
 
   void updateMax(int newMax) {

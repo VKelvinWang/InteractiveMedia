@@ -36,6 +36,7 @@ HashMap<String, SamplePlayer> samplePlayers; //All the sample audios loaded
 
 //Kelvin
 HashMap<String, PImage> imageManager; //Universally holds all images into a hashmap
+//Images used for the project
 PImage computer;
 PImage backgroundLoading;
 PImage backgroundMenu;

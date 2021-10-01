@@ -93,6 +93,23 @@ void setup() {
   float h = height - y;
   building = new Building(x, y, w, h);
   objects.add(building);
+  
+  //Kelvin
+  computer = loadImage("cartooncomp.png");
+  backgroundMenu = loadImage("background.jpg");
+  button = loadImage("button.png");
+  backgroundLoading = loadImage("black.jpg");
+
+  imageManager.put("Computer", computer);
+  imageManager.put("Background", backgroundMenu);
+  imageManager.put("Button", button);
+  imageManager.put("Loading", backgroundLoading);
+
+  x = width * 0.07;
+  y = height * 0.45;
+  w = 900;
+  h = 650;
+  objects.add(new Computer(x, y, w, h, imageManager.get("Computer")));
 
   x = width * 0.05;
   y = height * 0.2;
@@ -118,23 +135,6 @@ void setup() {
     labels[i] = str(i + 1);
   }
   objects.add(new DayNavigator(x, y, w, h, labels));
-
-  //Kelvin
-  computer = loadImage("cartooncomp.png");
-  backgroundMenu = loadImage("background.jpg");
-  button = loadImage("button.png");
-  backgroundLoading = loadImage("black.jpg");
-
-  imageManager.put("Computer", computer);
-  imageManager.put("Background", backgroundMenu);
-  imageManager.put("Button", button);
-  imageManager.put("Loading", backgroundLoading);
-
-  x = width * 0.07;
-  y = height * 0.45;
-  w = 900;
-  h = 650;
-  objects.add(new Computer(x, y, w, h, imageManager.get("Computer")));
 
   ///////////////////////////////////Minh
   ac = new AudioContext();

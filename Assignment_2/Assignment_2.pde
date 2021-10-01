@@ -37,7 +37,9 @@ HashMap<String, SamplePlayer> samplePlayers; //All the sample audios loaded
 //Kelvin
 HashMap<String, PImage> imageManager; //Universally holds all images into a hashmap
 PImage computer;
-PImage background;
+PImage backgroundLoading;
+PImage backgroundMenu;
+PImage button;
 
 void setup() {
   size(1920, 1080);
@@ -118,16 +120,22 @@ void setup() {
   objects.add(new DayNavigator(x, y, w, h, labels));
 
   //Kelvin
-  PImage computer = loadImage("cartooncomp.png");
-  PImage background = loadImage("background.png");
+  computer = loadImage("cartooncomp.png");
+  backgroundMenu = loadImage("background.jpg");
+  button = loadImage("button.png");
+  backgroundLoading = loadImage("black.jpg");
+
   imageManager.put("Computer", computer);
-  imageManager.put("background", background);
+  imageManager.put("Background", backgroundMenu);
+  imageManager.put("Button", button);
+  imageManager.put("Loading", backgroundLoading);
+
   x = width * 0.07;
   y = height * 0.45;
   w = 900;
   h = 650;
   objects.add(new Computer(x, y, w, h, imageManager.get("Computer")));
-  
+
   ///////////////////////////////////Minh
   ac = new AudioContext();
   samplePlayers = new HashMap<String, SamplePlayer>();
@@ -157,7 +165,8 @@ void setup() {
 }
 
 void draw() {
-  background(colours.get(state != "Show data" ? "Black" : "Sky blue").colour);
+  //display background
+  background(imageManager.get(state != "Show data" ? "Loading" : "Background"));
 
   if (prevLink != currLink) {
     prevLink = currLink; //Update link

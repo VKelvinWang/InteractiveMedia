@@ -76,7 +76,7 @@ public class Building extends CanvasObject {
     palette.put("No stroke", new Colour(color(0, 0, 0, 0)));
     palette.put("Busy", new Colour(color(250, 168, 26))); //Discord orange
     palette.put("Window", new Colour(color(24, 25, 28))); //Discord dark grey
-    palette.put("Body", new Colour(color(132, 115, 90))); //Ugliest Tower In Sydney colour
+    palette.put("Body", new Colour(color(157, 125, 125))); //Building 11 colour
   }
 
   void updateMax(int newMax) {
@@ -105,7 +105,7 @@ public class Building extends CanvasObject {
       float windowY = y + padY + windowH * (i / gridSize);
       rect(windowX, windowY, windowW * 0.9, windowH * 0.9);
     }
-    
+
     //kelvin
     //prints out text
     fill(colours.get("White").colour);
@@ -233,11 +233,13 @@ public class DayNavigator extends Navigator {
 public class NavigatorButton extends Button { //Dependent class on Timeline
   Navigator navigator;
   int step;
+  boolean isLeft;
 
-  NavigatorButton(Navigator navigator, float x, float y, float w, float h, int step) {
+  NavigatorButton(Navigator navigator, float x, float y, float w, float h, int step, boolean isLeft) {
     super(x, y, w, h);
     this.step = step;
     this.navigator = navigator;
+    this.isLeft = isLeft;
   }
 
   //Overrides Object
@@ -245,6 +247,19 @@ public class NavigatorButton extends Button { //Dependent class on Timeline
     stroke(palette.get("Black").colour);
     fill(palette.get(isHovering ? "HoverColour" : "Sky blue").colour);
     rect(x, y, w, h);
+    if (isLeft) { //if it is in the left position
+      stroke(palette.get("Black").colour);
+      fill(palette.get("Black").colour);
+      textAlign(CENTER, CENTER);
+      textSize(40);
+      text("Prev", x + w / 2, y + h / 2);
+    } else { //else, it is in the right position
+      stroke(palette.get("Black").colour);
+      fill(palette.get("Black").colour);
+      textAlign(CENTER, CENTER);
+      textSize(40);
+      text("Next", x + w / 2, y + h / 2);
+    }
     stroke(palette.get("Invisible").colour);
   }
 

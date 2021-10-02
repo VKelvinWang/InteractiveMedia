@@ -223,43 +223,33 @@ public class DayNavigator extends Navigator {
   }
 
   @Override void doAction() {
-    //int size = yearData.months[monthIndex].dailyLogins.size();
-    //index = index > size ? size - 1 : index;
-    //index %= size;
     dayIndex = index;
   }
 }
 
-public class NavigatorButton extends Button { //Dependent class on Timeline
+public class NavigatorButton extends Button {
   Navigator navigator;
   int step;
   boolean isLeft;
 
-  NavigatorButton(Navigator navigator, float x, float y, float w, float h, int step, boolean isLeft) {
+  NavigatorButton(Navigator navigator, float x, float y, float w, float h, int step) {
     super(x, y, w, h);
     this.step = step;
     this.navigator = navigator;
-    this.isLeft = isLeft;
+    isLeft = step < 0;
   }
 
   //Overrides Object
   @Override void display() {
     stroke(palette.get("Black").colour);
     fill(palette.get(isHovering ? "HoverColour" : "Sky blue").colour);
-    rect(x, y, w, h);
-    if (isLeft) { //if it is in the left position
-      stroke(palette.get("Black").colour);
-      fill(palette.get("Black").colour);
-      textAlign(CENTER, CENTER);
-      textSize(40);
-      text("Prev", x + w / 2, y + h / 2);
-    } else { //else, it is in the right position
-      stroke(palette.get("Black").colour);
-      fill(palette.get("Black").colour);
-      textAlign(CENTER, CENTER);
-      textSize(40);
-      text("Next", x + w / 2, y + h / 2);
-    }
+    
+    translate(x, y);
+    float point = isLeft ? h : 0;
+    triangle(point, point, point, h - point, h - point, h / 2);
+    rotate(radians(90));
+    resetMatrix();
+    
     stroke(palette.get("Invisible").colour);
   }
 
@@ -276,12 +266,15 @@ public class MonthlyBarGraph extends CanvasObject {
   float[] monthValues; //The average login for each month in values
   int prevLink; //The previous link a field separate to the global instance of the variable
   int max; //The highest login value in the month
+  HashMap<String, Colour> palette;
 
   MonthlyBarGraph(float x, float y, float w, float h) {
     super(x, y, w, h);
     monthValues = new float[12]; //There is always 12 months in a year right?
     prevLink = -1;
     max = 0;
+    palette = DeepCopyColours();
+    palette.put("Background", new Colour(color(255, 255, 255, 200)));
   }
 
   @Override void update() {
@@ -298,8 +291,11 @@ public class MonthlyBarGraph extends CanvasObject {
 
   @Override void display() {
     rectMode(CORNER);
-    fill(colours.get("Black").colour);
-    stroke(colours.get("White").colour);
+    fill(palette.get("Background").colour);
+    rect(x, y * 0.75, w, h * 2);
+    
+    fill(palette.get("Black").colour);
+    stroke(palette.get("White").colour);
     textAlign(CENTER, CENTER);
     textSize(30);
     float textHeight = textAscent() + textDescent();
@@ -313,6 +309,6 @@ public class MonthlyBarGraph extends CanvasObject {
       text(ceil(monthValues[i]), xPos + barWidth * 0.5, yPos - barHeight - textHeight);
     }
     text("Average user logins everyday (Rounded up)", x + w * 0.5, y + h * 1.5);
-    stroke(colours.get("Invisible").colour);
+    stroke(palette.get("Invisible").colour);
   }
 }

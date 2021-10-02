@@ -36,11 +36,6 @@ HashMap<String, SamplePlayer> samplePlayers; //All the sample audios loaded
 
 //Kelvin
 HashMap<String, PImage> imageManager; //Universally holds all images into a hashmap
-//Images used for the project
-PImage computer;
-PImage backgroundLoading;
-PImage backgroundMenu;
-PImage button;
 
 void setup() {
   size(1920, 1080);
@@ -96,10 +91,10 @@ void setup() {
   objects.add(building);
   
   //Kelvin
-  computer = loadImage("cartooncomp.png");
-  backgroundMenu = loadImage("background.jpg");
-  button = loadImage("button.png");
-  backgroundLoading = loadImage("black.jpg");
+  PImage computer = loadImage("cartooncomp.png");
+  PImage backgroundMenu = loadImage("background.jpg");
+  PImage button = loadImage("button.png");
+  PImage backgroundLoading = loadImage("black.jpg");
 
   imageManager.put("Computer", computer);
   imageManager.put("Background", backgroundMenu);

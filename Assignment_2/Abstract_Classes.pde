@@ -89,8 +89,8 @@ abstract class Navigator extends CanvasObject {
     super(x, y, w, h);
     this.labels = labels;
     index = currLink;
-    leftButton = new NavigatorButton(this, x, y, h, h, -1, true);
-    rightButton = new NavigatorButton(this, x + w - h, y, h, h, 1, false);
+    leftButton = new NavigatorButton(this, x, y, h, h, -1);
+    rightButton = new NavigatorButton(this, x + w - h, y, h, h, 1);
   }
 
   //Overrides Object

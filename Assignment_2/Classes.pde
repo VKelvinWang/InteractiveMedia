@@ -111,9 +111,12 @@ public class Building extends CanvasObject {
     fill(colours.get("White").colour);
     stroke(colours.get("Black").colour);
     textAlign(CENTER, CENTER);
+    textSize(30);
     textFont(font);
     text("UTS BUILDING 11", x + w / 2, y + h * 0.05);
     textFont(def);
+    textSize(45);
+    text(GetMonth(monthIndex).dailyLogins.get(dayIndex) + " people logged in that day.", x + w * 0.5, y + h * 0.95);
   }
 
   public void updateWindows() { //Call this procedure to update the data.
